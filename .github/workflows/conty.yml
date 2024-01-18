@@ -16,9 +16,31 @@ jobs:
         run: |
           chmod +x create-arch-bootstrap.sh create-conty.sh
           sudo ./create-arch-bootstrap.sh && ./create-conty.sh
+          mv conty.sh conty-orig.sh
+          rm -r root.x86_64
+          sed -i 's/enable_alhp_repo="false"/enable_alhp_repo="true"/' create-arch-bootstrap.sh
+          sudo ./create-arch-bootstrap.sh && ./create-conty.sh
+          mv conty.sh conty-x86-64-v2.sh
+          rm -r root.x86_64
+          sed -i 's/alhp_feature_level="2"/alhp_feature_level="3"/' create-arch-bootstrap.sh
+          sudo ./create-arch-bootstrap.sh && ./create-conty.sh
+          mv conty.sh conty-x86-64-v3.sh
+          mv conty-orig.sh conty.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: Conty
           path: conty.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Conty-x86-64-v2
+          path: conty-x86-64-v2.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Conty-x86-64-v3
+          path: conty-x86-64-v3.sh
